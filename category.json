@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "value": "navbar",
+    "text": "Navbar"
+  },
+  {
+    "id": 2,
+    "value": "sidebar",
+    "text": "Sidebar"
+  },
+  {
+    "id": 3,
+    "value": "breadcrumb",
+    "text": "Breadcrumb"
+  },
+  {
+    "id": 4,
+    "value": "button",
+    "text": "Button"
+  },
+  {
+    "id": 5,
+    "value": "textbox",
+    "text": "Textbox"
+  },
+  {
+    "id": 6,
+    "value": "textarea",
+    "text": "Textarea"
+  },
+  {
+    "id": 7,
+    "value": "checkbox",
+    "text": "Checkbox"
+  },
+  {
+    "id": 8,
+    "value": "radio",
+    "text": "Radio Button"
+  },
+  {
+    "id": 9,
+    "value": "dropdown",
+    "text": "Dropdown"
+  },
+  {
+    "id": 10,
+    "value": "modal",
+    "text": "Modal"
+  },
+  {
+    "id": 11,
+    "value": "popup",
+    "text": "Popup"
+  },
+  {
+    "id": 12,
+    "value": "alert",
+    "text": "Alert"
+  },
+  {
+    "id": 13,
+    "value": "tooltip",
+    "text": "Tooltip"
+  },
+  {
+    "id": 14,
+    "value": "card",
+    "text": "Card"
+  },
+  {
+    "id": 15,
+    "value": "panel",
+    "text": "Panel"
+  },
+  {
+    "id": 16,
+    "value": "accordion",
+    "text": "Accordion"
+  },
+  {
+    "id": 17,
+    "value": "tabs",
+    "text": "Tabs"
+  },
+  {
+    "id": 18,
+    "value": "table",
+    "text": "Table"
+  },
+  {
+    "id": 19,
+    "value": "pagination",
+    "text": "Pagination"
+  },
+  {
+    "id": 20,
+    "value": "widget",
+    "text": "Widget"
+  },
+  {
+    "id": 21,
+    "value": "dashboard",
+    "text": "Dashboard"
+  },
+  {
+    "id": 22,
+    "value": "timeline",
+    "text": "Timeline"
+  },
+  {
+    "id": 23,
+    "value": "stepper",
+    "text": "Stepper"
+  },
+  {
+    "id": 24,
+    "value": "loader",
+    "text": "Loader"
+  },
+  {
+    "id": 25,
+    "value": "footer",
+    "text": "Footer"
+  }
+]

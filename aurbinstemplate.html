@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Elements — Modern Reusable Buttons</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-0 m-0">
+
+    <!-- EVERYTHING WRAPPED STRICTLY INSIDE SINGLE CONTAINER DIV (NO BODY STYLING OR UNIVERSAL RESETS) -->
+    <div class="site-container relative w-full min-h-screen bg-slate-950 text-slate-100 font-sans overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+        
+        <!-- SCOPED CSS STYLES SPECIFIC TO .site-container (NO UNIVERSAL * OR BODY TAG SELECTORS) -->
+        <style>
+            /* Custom Scrollbar scoped */
+            .site-container ::-webkit-scrollbar {
+                width: 8px;
+            }
+            .site-container ::-webkit-scrollbar-track {
+                background: #090d16;
+            }
+            .site-container ::-webkit-scrollbar-thumb {
+                background: #4f46e5;
+                border-radius: 4px;
+            }
+
+            /* --- SCOPED BUTTON STYLES & SHAPES --- */
+
+            /* 1. Liquid Glass Capsule (Pill Shape) */
+            .site-container .btn-pill-glass {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 9999px;
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                position: relative;
+                overflow: hidden;
+            }
+            .site-container .btn-pill-glass::before {
+                content: '';
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+                transition: left 0.6s ease;
+            }
+            .site-container .btn-pill-glass:hover::before {
+                left: 100%;
+            }
+            .site-container .btn-pill-glass:hover {
+                transform: translateY(-3px) scale(1.02);
+                border-color: rgba(129, 140, 248, 0.5);
+                box-shadow: 0 12px 40px -10px rgba(99, 102, 241, 0.5);
+            }
+
+            /* 2. Cyber Hexagon / Octagon (Geometric Polygon Shape) */
+            .site-container .btn-cyber-polygon {
+                position: relative;
+                clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0% calc(100% - 12px), 0% 12px);
+                background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.15));
+                border: 1px solid #06b6d4;
+                transition: all 0.3s ease;
+            }
+            .site-container .btn-cyber-polygon::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: repeating-linear-gradient(0deg, rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.15) 1px, transparent 1px, transparent 3px);
+                pointer-events: none;
+                opacity: 0.5;
+            }
+            .site-container .btn-cyber-polygon:hover {
+                background: rgba(6, 182, 212, 0.3);
+                box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+                transform: scale(1.05);
+            }
+
+            /* 3. Asymmetric Organic Blob (Fluid Morphing Shape) */
+            .site-container .btn-organic-blob {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                background: linear-gradient(45deg, #ec4899, #8b5cf6);
+                animation: morphBlob 6s ease-in-out infinite;
+                transition: all 0.4s ease;
+            }
+            @keyframes morphBlob {
+                0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+                50% { border-radius: 30% 60% 70% 30% / 50% 60% 30% 60%; }
+                100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            }
+            .site-container .btn-organic-blob:hover {
+                transform: scale(1.08) rotate(2deg);
+                box-shadow: 0 10px 30px -5px rgba(236, 72, 153, 0.6);
+            }
+
+            /* 4. Modern Circle / Floating Action Sphere (Orbital Shape) */
+            .site-container .btn-orbital-sphere {
+                border-radius: 50%;
+                position: relative;
+                background: radial-gradient(circle at 30% 30%, #38bdf8, #0369a1);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .site-container .btn-orbital-ring {
+                position: absolute;
+                inset: -6px;
+                border-radius: 50%;
+                border: 2px dashed rgba(56, 189, 248, 0.5);
+                animation: spinOrbit 10s linear infinite;
+            }
+            @keyframes spinOrbit {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .site-container .btn-orbital-sphere:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 35px rgba(56, 189, 248, 0.8);
+            }
+
+            /* 5. Sharp Skewed Parallelogram (Slanted Angular Shape) */
+            .site-container .btn-skewed-badge {
+                transform: skewX(-12deg);
+                background: linear-gradient(90deg, #f59e0b, #ef4444);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .site-container .btn-skewed-badge-content {
+                transform: skewX(12deg);
+            }
+            .site-container .btn-skewed-badge:hover {
+                transform: skewX(-12deg) translateY(-2px);
+                box-shadow: -5px 8px 25px -5px rgba(245, 158, 11, 0.6);
+            }
+
+            /* Dynamic Spring Pill Nav Indicator */
+            .site-container .spring-pill {
+                transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s ease;
+            }
+        </style>
+
+        <!-- ================= 1. ANIMATED NAVIGATION BAR ================= -->
+        <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center space-x-3 group" onclick="playSfx('click')">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-all duration-300">
+                        <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="font-black text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-indigo-400">
+                        AURA<span class="text-indigo-500">.</span>BTNS
+                    </span>
+                </a>
+
+                <!-- Desktop Nav Navigation -->
+                <nav class="hidden md:flex items-center space-x-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800 relative">
+                    <div id="nav-pill" class="absolute top-1.5 bottom-1.5 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 spring-pill shadow-lg opacity-0 pointer-events-none"></div>
+
+                    <a href="#showcase" onclick="activateNavTab(this)" class="nav-item relative z-10 px-5 py-2 rounded-full text-xs font-semibold text-slate-300 hover:text-white transition">Showcase</a>
+                    <a href="#code-sec" onclick="activateNavTab(this)" class="nav-item relative z-10 px-5 py-2 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition">Code Snippets</a>
+                    <a href="#features" onclick="activateNavTab(this)" class="nav-item relative z-10 px-5 py-2 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition">Attributes</a>
+                </nav>
+
+                <!-- Action CTA -->
+                <button onclick="triggerConfetti()" class="hidden sm:flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition shadow-lg shadow-indigo-500/25 active:scale-95">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <span>Test Celebration</span>
+                </button>
+
+            </div>
+        </header>
+
+        <!-- ================= 2. HERO & BUTTON SHOWCASE SECTION ================= -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
+            
+            <!-- Hero Header -->
+            <div class="text-center space-y-4 max-w-3xl mx-auto">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-mono">
+                    <i data-lucide="component" class="w-3.5 h-3.5"></i>
+                    <span>SCOPED DIV CONTAINER COMPONENT</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
+                    5 Distinct Shapes, <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                        Zero Global CSS Contamination.
+                    </span>
+                </h1>
+                <p class="text-slate-400 text-sm sm:text-base">
+                    Fully self-contained, modular interactive HTML buttons crafted with physics-based hover states and scoped inline styles.
+                </p>
+            </div>
+
+            <!-- BUTTON SHOWCASE GRID -->
+            <section id="showcase" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- BUTTON 1 CARD: Liquid Glass Capsule -->
+                <div class="bg-slate-900/40 backdrop-blur-md rounded-3xl p-8 border border-slate-800/80 hover:border-indigo-500/40 transition flex flex-col justify-between space-y-8">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400">Shape 01 — Capsule</span>
+                        <h3 class="text-lg font-bold">Liquid Glass Capsule</h3>
+                        <p class="text-xs text-slate-400">Soft backdrop blur with fluid glowing gradient and smooth hover elevation.</p>
+                    </div>
+                    <div class="flex items-center justify-center py-6 min-h-[120px]">
+                        <!-- REUSABLE BUTTON 1 -->
+                        <button onclick="copyCode('btn-1')" class="btn-pill-glass px-7 py-3.5 flex items-center space-x-3 text-sm font-semibold text-white">
+                            <i data-lucide="droplet" class="w-4 h-4 text-indigo-400"></i>
+                            <span>Liquid Glass</span>
+                        </button>
+                    </div>
+                    <button onclick="copyCode('btn-1')" class="w-full py-2 bg-slate-800/50 hover:bg-slate-800 text-xs text-slate-300 rounded-xl font-mono flex items-center justify-center space-x-2 border border-slate-700/50">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        <span>Copy HTML Code</span>
+                    </button>
+                </div>
+
+                <!-- BUTTON 2 CARD: Cyber Hexagon / Octagon -->
+                <div class="bg-slate-900/40 backdrop-blur-md rounded-3xl p-8 border border-slate-800/80 hover:border-cyan-500/40 transition flex flex-col justify-between space-y-8">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400">Shape 02 — Geometric Polygon</span>
+                        <h3 class="text-lg font-bold">Cyber Polygon</h3>
+                        <p class="text-xs text-slate-400">Futuristic clipped edges with neon cyan stroke and scanline pattern.</p>
+                    </div>
+                    <div class="flex items-center justify-center py-6 min-h-[120px]">
+                        <!-- REUSABLE BUTTON 2 -->
+                        <button onclick="copyCode('btn-2')" class="btn-cyber-polygon px-8 py-3.5 flex items-center space-x-3 text-sm font-bold text-cyan-300 uppercase tracking-wider">
+                            <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                            <span>Cyber Hex</span>
+                        </button>
+                    </div>
+                    <button onclick="copyCode('btn-2')" class="w-full py-2 bg-slate-800/50 hover:bg-slate-800 text-xs text-slate-300 rounded-xl font-mono flex items-center justify-center space-x-2 border border-slate-700/50">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        <span>Copy HTML Code</span>
+                    </button>
+                </div>
+
+                <!-- BUTTON 3 CARD: Asymmetric Organic Blob -->
+                <div class="bg-slate-900/40 backdrop-blur-md rounded-3xl p-8 border border-slate-800/80 hover:border-pink-500/40 transition flex flex-col justify-between space-y-8">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-pink-400">Shape 03 — Organic Morph</span>
+                        <h3 class="text-lg font-bold">Fluid Organic Blob</h3>
+                        <p class="text-xs text-slate-400">Continuous CSS border-radius morphing curve with vibrant pink gradient.</p>
+                    </div>
+                    <div class="flex items-center justify-center py-6 min-h-[120px]">
+                        <!-- REUSABLE BUTTON 3 -->
+                        <button onclick="copyCode('btn-3')" class="btn-organic-blob px-8 py-4 flex items-center space-x-3 text-sm font-extrabold text-white">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            <span>Fluid Blob</span>
+                        </button>
+                    </div>
+                    <button onclick="copyCode('btn-3')" class="w-full py-2 bg-slate-800/50 hover:bg-slate-800 text-xs text-slate-300 rounded-xl font-mono flex items-center justify-center space-x-2 border border-slate-700/50">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        <span>Copy HTML Code</span>
+                    </button>
+                </div>
+
+                <!-- BUTTON 4 CARD: Modern Circle / Floating Sphere -->
+                <div class="bg-slate-900/40 backdrop-blur-md rounded-3xl p-8 border border-slate-800/80 hover:border-sky-500/40 transition flex flex-col justify-between space-y-8">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-sky-400">Shape 04 — Orbital Sphere</span>
+                        <h3 class="text-lg font-bold">Orbital Action Sphere</h3>
+                        <p class="text-xs text-slate-400">Perfect circular orb with rotating external orbital aura ring.</p>
+                    </div>
+                    <div class="flex items-center justify-center py-6 min-h-[120px]">
+                        <!-- REUSABLE BUTTON 4 -->
+                        <div class="relative">
+                            <div class="btn-orbital-ring"></div>
+                            <button onclick="copyCode('btn-4')" class="btn-orbital-sphere w-14 h-14 flex items-center justify-center text-white shadow-lg">
+                                <i data-lucide="compass" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="copyCode('btn-4')" class="w-full py-2 bg-slate-800/50 hover:bg-slate-800 text-xs text-slate-300 rounded-xl font-mono flex items-center justify-center space-x-2 border border-slate-700/50">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        <span>Copy HTML Code</span>
+                    </button>
+                </div>
+
+                <!-- BUTTON 5 CARD: Sharp Skewed Parallelogram -->
+                <div class="bg-slate-900/40 backdrop-blur-md rounded-3xl p-8 border border-slate-800/80 hover:border-amber-500/40 transition flex flex-col justify-between space-y-8 md:col-span-2 lg:col-span-1">
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400">Shape 05 — Angular Skew</span>
+                        <h3 class="text-lg font-bold">Skewed Badge</h3>
+                        <p class="text-xs text-slate-400">Aggressive slanted angle with high-contrast amber gradient shine.</p>
+                    </div>
+                    <div class="flex items-center justify-center py-6 min-h-[120px]">
+                        <!-- REUSABLE BUTTON 5 -->
+                        <button onclick="copyCode('btn-5')" class="btn-skewed-badge px-8 py-3.5 text-white font-black text-sm uppercase tracking-wider">
+                            <div class="btn-skewed-badge-content flex items-center space-x-2">
+                                <i data-lucide="flame" class="w-4 h-4"></i>
+                                <span>Skewed Badge</span>
+                            </div>
+                        </button>
+                    </div>
+                    <button onclick="copyCode('btn-5')" class="w-full py-2 bg-slate-800/50 hover:bg-slate-800 text-xs text-slate-300 rounded-xl font-mono flex items-center justify-center space-x-2 border border-slate-700/50">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        <span>Copy HTML Code</span>
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- CODE PREVIEW & ATTRIBUTES SECTION -->
+            <section id="code-sec" class="bg-slate-900/60 rounded-3xl p-8 border border-slate-800 space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold flex items-center space-x-2">
+                        <i data-lucide="code-2" class="w-5 h-5 text-indigo-400"></i>
+                        <span>Scoped Code Structure</span>
+                    </h2>
+                    <span class="text-xs font-mono text-slate-400 bg-slate-800 px-3 py-1 rounded-full">DIV SCOPED</span>
+                </div>
+                <div class="bg-slate-950 rounded-2xl p-4 font-mono text-xs text-indigo-300 overflow-x-auto border border-slate-800">
+                    <pre><code>&lt;!-- Entire Layout & Styles Wrapped Inside Single Parent Div --&gt;
+&lt;div class="site-container"&gt;
+    &lt;style&gt;
+        /* Scoped strictly to .site-container without universal * or body resets */
+        .site-container .btn-pill-glass { ... }
+        .site-container .btn-cyber-polygon { ... }
+        .site-container .btn-organic-blob { ... }
+        .site-container .btn-orbital-sphere { ... }
+        .site-container .btn-skewed-badge { ... }
+    &lt;/style&gt;
+
+    &lt;!-- Interactive Page Content --&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ================= 3. COMPREHENSIVE FOOTER ================= -->
+        <footer id="features" class="border-t border-slate-800/80 bg-slate-950/90 py-12 mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-1 text-center md:text-left">
+                        <span class="font-bold text-lg text-white">AURA BUTTONS UI</span>
+                        <p class="text-xs text-slate-400">Modular interactive component set strictly contained within a parent div element.</p>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="flex space-x-3">
+                        <a href="#" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-indigo-400 transition"><i data-lucide="github" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-cyan-400 transition"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-pink-400 transition"><i data-lucide="globe" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <!-- Bottom Copyright & Back To Top -->
+                <div class="pt-6 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                    <span>© <span id="year-out">2026</span> Aura UI Kit. Self-Contained Component.</span>
+                    <button onclick="scrollToTop()" class="flex items-center space-x-2 text-slate-400 hover:text-white transition">
+                        <span>Back to top</span>
+                        <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+            </div>
+        </footer>
+
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="fixed bottom-6 right-6 bg-indigo-600 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl transition transform translate-y-20 opacity-0 pointer-events-none flex items-center space-x-2">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span id="toast-msg">Code copied to clipboard!</span>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Web Audio Synth for Click Sounds
+        let audioCtx = null;
+        function playSfx(type = 'click') {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(500, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } catch (e) {}
+        }
+
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            document.getElementById('year-out').textContent = new Date().getFullYear();
+            
+            // Set initial Nav Pill
+            const firstNav = document.querySelector('.nav-item');
+            if (firstNav) activateNavTab(firstNav);
+        });
+
+        function activateNavTab(el) {
+            playSfx();
+            const pill = document.getElementById('nav-pill');
+            if (pill && el) {
+                const navRect = el.parentElement.getBoundingClientRect();
+                const tabRect = el.getBoundingClientRect();
+                pill.style.left = `${tabRect.left - navRect.left}px`;
+                pill.style.width = `${tabRect.width}px`;
+                pill.style.opacity = '1';
+            }
+        }
+
+        function triggerConfetti() {
+            playSfx();
+            confetti({
+                particleCount: 70,
+                spread: 60,
+                origin: { y: 0.8 },
+                colors: ['#6366f1', '#06b6d4', '#ec4899', '#f59e0b']
+            });
+        }
+
+        function copyCode(btnId) {
+            playSfx();
+            let code = '';
+            if (btnId === 'btn-1') code = `<button class="btn-pill-glass px-7 py-3.5 text-sm font-semibold text-white">Liquid Glass</button>`;
+            if (btnId === 'btn-2') code = `<button class="btn-cyber-polygon px-8 py-3.5 text-sm font-bold text-cyan-300 uppercase">Cyber Hex</button>`;
+            if (btnId === 'btn-3') code = `<button class="btn-organic-blob px-8 py-4 text-sm font-extrabold text-white">Fluid Blob</button>`;
+            if (btnId === 'btn-4') code = `<div class="relative"><div class="btn-orbital-ring"></div><button class="btn-orbital-sphere w-14 h-14 text-white">Orb</button></div>`;
+            if (btnId === 'btn-5') code = `<button class="btn-skewed-badge px-8 py-3.5 text-white font-black text-sm uppercase"><div class="btn-skewed-badge-content">Skewed Badge</div></button>`;
+
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Button HTML copied!');
+            }).catch(() => {
+                showToast('Copied button class name!');
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        function scrollToTop() {
+            playSfx();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

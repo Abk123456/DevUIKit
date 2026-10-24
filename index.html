@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIDevKit</title>
+    <!-- Tailwind CSS for utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="uidevkit.css" />
+
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    
+
+    <!-- Top Navigation & Search Bar Header -->
+    <header class="sticky top-0 z-50 glass-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Brand / Logo -->
+                <div class="flex items-center space-x-3 shrink-0">
+                    <a href="#" class="flex items-center space-x-2 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-layer-group text-base"></i>
+                        </div>
+                        <span class="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent hidden sm:inline">UIDevKit</span>
+                    </a>
+                </div>
+
+
+
+                <!-- Animated Search Bar with Attached Category Dropdown -->
+                <div class="flex-1 max-w-xl flex justify-center">
+                    <div class="search-group" id="searchGroup">
+                        <!-- Category Dropdown -->
+                        <select id="categorySelect" class="category-select" aria-label="Select Component Category">
+                            <option value="all">All Categories</option>
+                            <option value="widget">widget</option>
+                            <option value="navbar">navbar</option>
+                            <option value="sidebar">sidebar</option>
+                            <option value="bredcrum">bredcrum</option>
+                            <option value="alert">alert</option>
+                            <option value="textbox">textbox</option>
+                            <option value="checkbox">checkbox</option>
+                            <option value="button">button</option>
+                            <option value="panel">panel</option>
+                            <option value="card">card</option>
+                        </select>
+
+
+
+                        <!-- Input field -->
+                        <input type="text" id="searchInput" class="search-input-field" placeholder="Search components..." autocomplete="off">
+
+
+
+                        <!-- Search Button -->
+                        <button type="button" id="searchBtn" class="search-submit-btn" aria-label="Submit Search">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <!-- Right Action Link -->
+                <div class="hidden md:flex items-center space-x-3 shrink-0">
+                    <a href="#" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Documentation</a>
+                    <a href="#" class="px-4 py-2 rounded-full text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-500/20 transition-all">
+                        Template Library
+                    </a>
+                </div>
+
+
+
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- Main Content Grid Demonstrating Search & Filtering -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <!-- Search Status / Filter feedback -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Explore Component Library</h1>
+                <p id="filterStatus" class="text-sm text-slate-500 mt-1">Showing all components across 10 categories.</p>
+            </div>
+            <div id="activeTagBadge" class="hidden items-center space-x-2 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-semibold text-indigo-600">
+                <span>Filtered by: <strong id="currentFilterText">all</strong></span>
+                <button onclick="resetFilters()" class="hover:text-indigo-800 ml-1"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+
+
+        <!-- Sample Grid of Components matching categories -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="componentGrid">
+            
+            <!-- Card 1 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="widget" data-name="analytics widget">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-semibold rounded-full">widget</span>
+                    <i class="fa-solid fa-chart-pie text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Analytics Widget</h3>
+                <p class="text-sm text-slate-500">Real-time metrics tracking dashboard card with responsive graphs.</p>
+            </div>
+
+
+
+            <!-- Card 2 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="navbar" data-name="glass navbar">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-violet-50 text-violet-600 text-xs font-semibold rounded-full">navbar</span>
+                    <i class="fa-solid fa-bars text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Glass Navbar</h3>
+                <p class="text-sm text-slate-500">Top navigation bar with backdrop blur and animated expanding search.</p>
+            </div>
+
+
+
+            <!-- Card 3 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="sidebar" data-name="collapsible sidebar">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">sidebar</span>
+                    <i class="fa-solid fa-table-columns text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Collapsible Sidebar</h3>
+                <p class="text-sm text-slate-500">Vertical navigation drawer with nested badge links and icons.</p>
+            </div>
+
+
+
+            <!-- Card 4 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="bredcrum" data-name="path bredcrum">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-semibold rounded-full">bredcrum</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Path Bredcrum</h3>
+                <p class="text-sm text-slate-500">Hierarchy location tracker for deep nested page navigation.</p>
+            </div>
+
+
+
+            <!-- Card 5 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="alert" data-name="notification alert">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-amber-50 text-amber-600 text-xs font-semibold rounded-full">alert</span>
+                    <i class="fa-solid fa-triangle-exclamation text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Notification Alert</h3>
+                <p class="text-sm text-slate-500">Dismissible feedback banners for success, error, and warning messages.</p>
+            </div>
+
+
+
+            <!-- Card 6 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="textbox" data-name="floating textbox">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-rose-50 text-rose-600 text-xs font-semibold rounded-full">textbox</span>
+                    <i class="fa-solid fa-i-cursor text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Floating Textbox</h3>
+                <p class="text-sm text-slate-500">Modern input text field with floating label animation and validation.</p>
+            </div>
+
+
+
+            <!-- Card 7 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="checkbox" data-name="toggle checkbox">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-cyan-50 text-cyan-600 text-xs font-semibold rounded-full">checkbox</span>
+                    <i class="fa-solid fa-square-check text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Toggle Checkbox</h3>
+                <p class="text-sm text-slate-500">Custom styled check inputs with smooth transition and checked states.</p>
+            </div>
+
+
+
+            <!-- Card 8 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="button" data-name="gradient button">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-purple-50 text-purple-600 text-xs font-semibold rounded-full">button</span>
+                    <i class="fa-solid fa-hand-pointer text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Gradient Button</h3>
+                <p class="text-sm text-slate-500">Interactive CTA button with shadow depth and hover zoom feedback.</p>
+            </div>
+
+
+
+            <!-- Card 9 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="panel" data-name="collapsible panel">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-teal-50 text-teal-600 text-xs font-semibold rounded-full">panel</span>
+                    <i class="fa-solid fa-window-maximize text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Collapsible Panel</h3>
+                <p class="text-sm text-slate-500">Accordion style content containers with smooth expand animations.</p>
+            </div>
+
+
+
+            <!-- Card 10 -->
+            <div class="component-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" data-category="card" data-name="pricing card">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-semibold rounded-full">card</span>
+                    <i class="fa-solid fa-credit-card text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Pricing Card</h3>
+                <p class="text-sm text-slate-500">Feature tier display container with highlighted border styling.</p>
+            </div>
+
+
+
+        </div>
+
+
+
+        <!-- Empty state notice if filter returns nothing -->
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800">No components found</h3>
+            <p class="text-sm text-slate-500 mt-1">Try adjusting your search query or selecting a different category.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-500 transition">Reset Search</button>
+        </div>
+
+
+
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-8 text-center text-sm text-slate-500">
+        <p>© 2026 UIStack Component Library. Built with Tailwind CSS & JavaScript.</p>
+    </footer>
+
+
+
+    <!-- Interactive Filtering & Search Animation Logic -->
+    <script src="uidevkit.js"></script>
+</body>
+</html>

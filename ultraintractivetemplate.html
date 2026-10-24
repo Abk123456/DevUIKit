@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next-Gen Navigation Bar Showcase</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0a12',
+                            card: '#121124',
+                            neonPink: '#ff007f',
+                            neonBlue: '#00f3ff',
+                            neonPurple: '#b026ff',
+                        },
+                        emeraldTheme: {
+                            bg: '#041f1e',
+                            card: '#0a2e2b',
+                            accent: '#10b981',
+                            glow: '#34d399',
+                        },
+                        sunset: {
+                            bg: '#1a0b1e',
+                            card: '#2a1235',
+                            accent: '#ff5e62',
+                            gold: '#ff9966',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'Monaco', 'monospace']
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.8, filter: 'drop-shadow(0 0 15px currentColor)' },
+                            '50%': { opacity: 0.4, filter: 'drop-shadow(0 0 5px currentColor)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        },
+                        ripple: {
+                            '0%': { transform: 'scale(0)', opacity: 1 },
+                            '100%': { transform: 'scale(4)', opacity: 0 }
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'ripple': 'ripple 0.6s linear'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for interactions -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-panel-dark {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Dynamic Island Expand Animation */
+        .dynamic-island {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Radial Menu Items Animation */
+        .radial-item {
+            transition: transform 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity 0.3s ease;
+        }
+
+        /* Liquid Tube Slider Glitch / Glow Effect */
+        .liquid-glow {
+            box-shadow: 0 0 20px currentColor, inset 0 0 10px currentColor;
+        }
+
+        /* Cyberpunk Neon Shadow Effect */
+        .neon-shadow {
+            box-shadow: 0 0 15px #00f3ff, 0 0 30px #ff007f;
+        }
+
+        /* Neumorphic inset/outset shadows */
+        .neu-flat {
+            background: #181824;
+            box-shadow:  6px 6px 14px #0d0d14, -6px -6px 14px #232334;
+        }
+        .neu-pressed {
+            background: #181824;
+            box-shadow: inset 5px 5px 10px #0d0d14, inset -5px -5px 10px #232334;
+        }
+
+        /* Spring Slide Indicator Transition */
+        .spring-transition {
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s ease, left 0.35s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen transition-colors duration-500 overflow-x-hidden selection:bg-cyan-500 selection:text-black">
+
+    <!-- TOP HEADER / CONTROLS PANEL -->
+    <header class="sticky top-0 z-40 w-full glass-panel-dark border-b border-slate-800/80 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Logo & Title -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                    <i data-lucide="compass" class="w-6 h-6 text-white animate-spin-slow"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                        NavCraft <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono border border-cyan-500/30">v2.5</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 hidden sm:block">Ultra-Interactive Animated Navigation Component Library</p>
+                </div>
+            </div>
+
+            <!-- Global Controls Options -->
+            <div class="flex items-center flex-wrap gap-2 sm:gap-4 text-xs font-medium">
+                
+                <!-- Audio Feedback Toggle -->
+                <button id="sound-toggle-btn" onclick="toggleAudio()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 transition">
+                    <i id="sound-icon" data-lucide="volume-2" class="w-4 h-4 text-emerald-400"></i>
+                    <span id="sound-status">SFX: ON</span>
+                </button>
+
+                <!-- Color Theme Selector -->
+                <div class="flex items-center space-x-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 px-2 hidden md:inline">Theme:</span>
+                    <button onclick="setTheme('cyberpunk')" class="px-2.5 py-1 rounded-lg transition hover:opacity-80 bg-gradient-to-r from-pink-500 to-cyan-500 text-white font-semibold">Cyber</button>
+                    <button onclick="setTheme('glass')" class="px-2.5 py-1 rounded-lg transition hover:opacity-80 bg-slate-800 text-slate-200 border border-slate-700">Glass</button>
+                    <button onclick="setTheme('emerald')" class="px-2.5 py-1 rounded-lg transition hover:opacity-80 bg-emerald-700 text-emerald-100">Emerald</button>
+                    <button onclick="setTheme('sunset')" class="px-2.5 py-1 rounded-lg transition hover:opacity-80 bg-gradient-to-r from-amber-500 to-rose-500 text-white">Sunset</button>
+                </div>
+
+                <!-- Code View Button -->
+                <button onclick="toggleCodeModal()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition">
+                    <i data-lucide="code" class="w-4 h-4"></i>
+                    <span>Export Code</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- NAV STYLE SWITCHER TABS -->
+        <div class="flex flex-col items-center space-y-4 text-center">
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Select Navigation Architecture</h2>
+            <p class="text-slate-400 max-w-xl text-sm">Switch between futuristic interactive navigation paradigms. Test hover effects, active indicator transitions, click triggers, and responsiveness.</p>
+
+            <div class="inline-flex p-1.5 rounded-2xl bg-slate-900/80 border border-slate-800 max-w-full overflow-x-auto no-scrollbar space-x-1">
+                <button onclick="switchNavStyle('liquid')" id="tab-liquid" class="nav-tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 bg-cyan-500 text-black font-semibold shadow-lg shadow-cyan-500/25">
+                    <i data-lucide="droplet" class="w-4 h-4"></i>
+                    <span>1. Liquid Glass</span>
+                </button>
+                <button onclick="switchNavStyle('cyber')" id="tab-cyber" class="nav-tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                    <span>2. Cyber Glow</span>
+                </button>
+                <button onclick="switchNavStyle('island')" id="tab-island" class="nav-tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                    <span>3. Dynamic Island</span>
+                </button>
+                <button onclick="switchNavStyle('radial')" id="tab-radial" class="nav-tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="disc" class="w-4 h-4"></i>
+                    <span>4. Radial Action</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STAGE CANVAS AREA (Where Navigation Component Rendering Happens) -->
+        <section class="relative min-h-[380px] rounded-3xl border border-slate-800/80 bg-slate-900/30 p-4 sm:p-8 flex flex-col justify-between items-center overflow-hidden backdrop-blur-sm transition-all duration-500 shadow-2xl">
+            
+            <!-- Decorative Ambient Background Glows -->
+            <div id="ambient-glow-1" class="absolute -top-24 -left-24 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div id="ambient-glow-2" class="absolute -bottom-24 -right-24 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Header Description of Currently Selected Nav -->
+            <div class="w-full flex justify-between items-center text-xs text-slate-400 border-b border-slate-800/50 pb-3 mb-6">
+                <span id="nav-description-title" class="font-semibold text-slate-200 text-sm flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400"></i> Liquid Glassmorphism Dock
+                </span>
+                <span id="nav-description-tag" class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">Physics Spring Indicator</span>
+            </div>
+
+            <!-- LIVE NAVBAR DISPLAY ZONE -->
+            <div class="w-full flex-1 flex items-center justify-center relative py-6 my-auto">
+                
+                <!-- ================= NAVBAR STYLE 1: LIQUID GLASS DOCK ================= -->
+                <div id="nav-container-liquid" class="nav-demo-block w-full flex justify-center transition-all duration-500">
+                    <nav class="relative glass-panel rounded-full p-2 flex items-center space-x-1 sm:space-x-2 shadow-2xl border border-white/20 max-w-full overflow-x-auto">
+                        <!-- Sliding Liquid Pill Indicator -->
+                        <div id="liquid-pill" class="absolute top-2 bottom-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 spring-transition shadow-lg shadow-cyan-500/40 opacity-0 pointer-events-none"></div>
+
+                        <!-- Nav Items -->
+                        <button onclick="activateLiquidTab(this, 'dashboard')" class="liquid-tab relative z-10 flex items-center space-x-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-200 text-slate-200 hover:text-white">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button onclick="activateLiquidTab(this, 'analytics')" class="liquid-tab relative z-10 flex items-center space-x-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-200 text-slate-400 hover:text-white">
+                            <i data-lucide="line-chart" class="w-4 h-4"></i>
+                            <span>Analytics</span>
+                        </button>
+                        <button onclick="activateLiquidTab(this, 'projects')" class="liquid-tab relative z-10 flex items-center space-x-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-200 text-slate-400 hover:text-white">
+                            <i data-lucide="folder-kanban" class="w-4 h-4"></i>
+                            <span>Projects</span>
+                        </button>
+                        <button onclick="activateLiquidTab(this, 'team')" class="liquid-tab relative z-10 flex items-center space-x-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-200 text-slate-400 hover:text-white">
+                            <i data-lucide="users" class="w-4 h-4"></i>
+                            <span>Team</span>
+                        </button>
+                        <button onclick="activateLiquidTab(this, 'settings')" class="liquid-tab relative z-10 flex items-center space-x-2 px-4 sm:px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-200 text-slate-400 hover:text-white">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                            <span>Settings</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- ================= NAVBAR STYLE 2: CYBERPUNK NEON GLOW ================= -->
+                <div id="nav-container-cyber" class="nav-demo-block hidden w-full flex justify-center transition-all duration-500">
+                    <nav class="relative bg-slate-950/90 border-2 border-cyan-500/50 rounded-2xl p-2 flex items-center space-x-1 sm:space-x-3 shadow-[0_0_25px_rgba(0,243,255,0.25)]">
+                        
+                        <!-- Glowing Neon Underline Slide -->
+                        <div id="cyber-glow-bar" class="absolute bottom-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 spring-transition rounded-t-full shadow-[0_0_12px_#00f3ff] opacity-0"></div>
+
+                        <button onclick="activateCyberTab(this, 'dashboard')" class="cyber-tab px-4 py-2.5 rounded-xl text-sm font-mono font-semibold tracking-wide flex items-center space-x-2 text-cyan-400 transition hover:bg-cyan-950/40">
+                            <i data-lucide="terminal" class="w-4 h-4"></i>
+                            <span>SYS_HOME</span>
+                        </button>
+                        <button onclick="activateCyberTab(this, 'analytics')" class="cyber-tab px-4 py-2.5 rounded-xl text-sm font-mono font-semibold tracking-wide flex items-center space-x-2 text-slate-400 transition hover:text-pink-400 hover:bg-pink-950/30">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                            <span>DATA_STREAM</span>
+                        </button>
+                        <button onclick="activateCyberTab(this, 'projects')" class="cyber-tab px-4 py-2.5 rounded-xl text-sm font-mono font-semibold tracking-wide flex items-center space-x-2 text-slate-400 transition hover:text-purple-400 hover:bg-purple-950/30">
+                            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                            <span>SECURITY</span>
+                        </button>
+                        <button onclick="activateCyberTab(this, 'settings')" class="cyber-tab px-4 py-2.5 rounded-xl text-sm font-mono font-semibold tracking-wide flex items-center space-x-2 text-slate-400 transition hover:text-yellow-400 hover:bg-yellow-950/30">
+                            <i data-lucide="sliders" class="w-4 h-4"></i>
+                            <span>CONFIG</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- ================= NAVBAR STYLE 3: DYNAMIC ISLAND EXPANDABLE ================= -->
+                <div id="nav-container-island" class="nav-demo-block hidden w-full flex justify-center transition-all duration-500">
+                    <div id="dynamic-island-el" class="dynamic-island bg-black/90 border border-slate-800 rounded-full py-2.5 px-5 flex items-center space-x-6 text-white shadow-2xl hover:border-slate-700 cursor-pointer select-none">
+                        
+                        <!-- Compact Normal State -->
+                        <div id="island-compact" class="flex items-center space-x-6 w-full justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="relative">
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping absolute top-0 left-0"></div>
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                </div>
+                                <span class="text-xs font-semibold tracking-wider font-mono text-emerald-400">LIVE SESSION</span>
+                            </div>
+
+                            <!-- Island Navigation Shortcuts -->
+                            <div class="flex items-center space-x-3 text-slate-300">
+                                <button onclick="selectIslandPage('dashboard', event)" class="hover:text-cyan-400 p-1.5 hover:bg-slate-800 rounded-full transition"><i data-lucide="home" class="w-4 h-4"></i></button>
+                                <button onclick="selectIslandPage('analytics', event)" class="hover:text-cyan-400 p-1.5 hover:bg-slate-800 rounded-full transition"><i data-lucide="activity" class="w-4 h-4"></i></button>
+                                <button onclick="selectIslandPage('projects', event)" class="hover:text-cyan-400 p-1.5 hover:bg-slate-800 rounded-full transition"><i data-lucide="grid" class="w-4 h-4"></i></button>
+                            </div>
+
+                            <!-- Expand Toggle Button -->
+                            <button onclick="toggleIslandExpand(event)" class="bg-slate-800 hover:bg-slate-700 p-1.5 rounded-full text-slate-200 transition">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <!-- Expanded Tray Content (Hidden by Default) -->
+                        <div id="island-expanded" class="hidden flex-col w-full space-y-4 p-2">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <div class="flex items-center space-x-2 text-slate-400 text-xs font-mono">
+                                    <i data-lucide="command" class="w-4 h-4 text-cyan-400"></i>
+                                    <span>COMMAND PALETTE & QUICK ACTIONS</span>
+                                </div>
+                                <button onclick="toggleIslandExpand(event)" class="text-slate-400 hover:text-white p-1 rounded-full hover:bg-slate-800">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <!-- Search Input -->
+                            <div class="relative">
+                                <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-3"></i>
+                                <input type="text" placeholder="Search pages, team members, commands..." class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 pl-9 pr-4 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                            </div>
+
+                            <!-- Quick Action Buttons Grid -->
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="selectIslandPage('dashboard', event); toggleIslandExpand(event);" class="p-2.5 rounded-xl bg-slate-900/90 hover:bg-cyan-950/60 border border-slate-800 text-left transition group">
+                                    <i data-lucide="layout" class="w-4 h-4 text-cyan-400 mb-1 group-hover:scale-110 transition-transform"></i>
+                                    <div class="text-xs font-medium">Dashboard</div>
+                                    <div class="text-[10px] text-slate-500">Main overview</div>
+                                </button>
+                                <button onclick="selectIslandPage('analytics', event); toggleIslandExpand(event);" class="p-2.5 rounded-xl bg-slate-900/90 hover:bg-purple-950/60 border border-slate-800 text-left transition group">
+                                    <i data-lucide="pie-chart" class="w-4 h-4 text-purple-400 mb-1 group-hover:scale-110 transition-transform"></i>
+                                    <div class="text-xs font-medium">Analytics</div>
+                                    <div class="text-[10px] text-slate-500">Realtime data</div>
+                                </button>
+                                <button onclick="selectIslandPage('projects', event); toggleIslandExpand(event);" class="p-2.5 rounded-xl bg-slate-900/90 hover:bg-pink-950/60 border border-slate-800 text-left transition group">
+                                    <i data-lucide="layers" class="w-4 h-4 text-pink-400 mb-1 group-hover:scale-110 transition-transform"></i>
+                                    <div class="text-xs font-medium">Projects</div>
+                                    <div class="text-[10px] text-slate-500">Active tasks</div>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= NAVBAR STYLE 4: RADIAL / FLOATING ACTION CIRCLE ================= -->
+                <div id="nav-container-radial" class="nav-demo-block hidden w-full flex justify-center items-center h-48 transition-all duration-500">
+                    <div class="relative flex items-center justify-center">
+                        
+                        <!-- Center Floating Action Button Trigger -->
+                        <button id="radial-trigger" onclick="toggleRadialMenu()" class="w-16 h-16 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-600 to-pink-500 text-white flex items-center justify-center shadow-xl shadow-cyan-500/30 hover:scale-110 active:scale-95 transition-all duration-300 z-20">
+                            <i id="radial-icon" data-lucide="plus" class="w-8 h-8 transition-transform duration-300"></i>
+                        </button>
+
+                        <!-- Orbiting Items -->
+                        <div id="radial-menu" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <button onclick="selectRadialPage('dashboard')" class="radial-item absolute w-12 h-12 rounded-full bg-slate-900 border border-slate-700 text-cyan-400 flex items-center justify-center shadow-lg hover:bg-cyan-500 hover:text-black transition-colors opacity-0 pointer-events-auto" style="transform: translate(0px, 0px);">
+                                <i data-lucide="home" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="selectRadialPage('analytics')" class="radial-item absolute w-12 h-12 rounded-full bg-slate-900 border border-slate-700 text-purple-400 flex items-center justify-center shadow-lg hover:bg-purple-500 hover:text-black transition-colors opacity-0 pointer-events-auto" style="transform: translate(0px, 0px);">
+                                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="selectRadialPage('projects')" class="radial-item absolute w-12 h-12 rounded-full bg-slate-900 border border-slate-700 text-pink-400 flex items-center justify-center shadow-lg hover:bg-pink-500 hover:text-black transition-colors opacity-0 pointer-events-auto" style="transform: translate(0px, 0px);">
+                                <i data-lucide="briefcase" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="selectRadialPage('team')" class="radial-item absolute w-12 h-12 rounded-full bg-slate-900 border border-slate-700 text-emerald-400 flex items-center justify-center shadow-lg hover:bg-emerald-500 hover:text-black transition-colors opacity-0 pointer-events-auto" style="transform: translate(0px, 0px);">
+                                <i data-lucide="users" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="selectRadialPage('settings')" class="radial-item absolute w-12 h-12 rounded-full bg-slate-900 border border-slate-700 text-yellow-400 flex items-center justify-center shadow-lg hover:bg-yellow-500 hover:text-black transition-colors opacity-0 pointer-events-auto" style="transform: translate(0px, 0px);">
+                                <i data-lucide="settings" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Mobile Drawer Menu Simulation Toggle Button (For Testing Mobile Layout) -->
+            <div class="w-full flex justify-end">
+                <button onclick="toggleMobileDrawer()" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1 bg-slate-800/60 px-3 py-1.5 rounded-xl border border-slate-700/50 transition">
+                    <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+                    <span>Test Mobile Drawer</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE PAGE CONTENT SIMULATOR (Changes dynamically when nav items clicked) -->
+        <section id="content-preview-card" class="rounded-3xl border border-slate-800/80 bg-slate-900/50 p-6 sm:p-8 backdrop-blur-md transition-all duration-500">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-xs uppercase font-mono tracking-widest text-slate-400">Interactive Page Canvas</span>
+                    </div>
+                    <h3 id="preview-page-title" class="text-2xl font-bold mt-1 text-white">Dashboard Overview</h3>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="triggerConfetti()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition flex items-center space-x-1.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                        <span>Celebrate Action</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Simulated Page Body Grid Content -->
+            <div id="preview-page-body" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Dynamic cards populated by JS based on selection -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MOBILE DRAWER MODAL OVERLAY -->
+    <div id="mobile-drawer-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300 flex justify-end">
+        <div id="mobile-drawer-content" class="w-80 h-full bg-slate-900 border-l border-slate-800 p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+            <div>
+                <!-- Drawer Header -->
+                <div class="flex items-center justify-between pb-6 border-b border-slate-800">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">N</div>
+                        <span class="font-bold text-white">Mobile Navigation</span>
+                    </div>
+                    <button onclick="toggleMobileDrawer()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Drawer Links -->
+                <div class="mt-6 space-y-2">
+                    <button onclick="selectMobileLink('dashboard')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition font-medium text-left">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="selectMobileLink('analytics')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition font-medium text-left">
+                        <i data-lucide="line-chart" class="w-5 h-5"></i>
+                        <span>Analytics</span>
+                    </button>
+                    <button onclick="selectMobileLink('projects')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition font-medium text-left">
+                        <i data-lucide="folder-kanban" class="w-5 h-5"></i>
+                        <span>Projects</span>
+                    </button>
+                    <button onclick="selectMobileLink('team')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition font-medium text-left">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                        <span>Team</span>
+                    </button>
+                    <button onclick="selectMobileLink('settings')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition font-medium text-left">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                        <span>Settings</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="pt-6 border-t border-slate-800">
+                <div class="flex items-center space-x-3 p-3 bg-slate-800/50 rounded-xl">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-xs">JD</div>
+                    <div class="overflow-hidden">
+                        <div class="text-xs font-semibold text-white truncate">Jane Doe</div>
+                        <div class="text-[10px] text-slate-400 truncate">jane.doe@navcraft.io</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CODE SNIPPET EXPORT MODAL -->
+    <div id="code-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="code" class="w-5 h-5 text-cyan-400"></i>
+                    <h3 class="font-bold text-white text-base">Component Source Code</h3>
+                </div>
+                <button onclick="toggleCodeModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Code View) -->
+            <div class="p-6 overflow-y-auto flex-1 font-mono text-xs text-slate-300 bg-slate-950">
+                <pre><code id="code-preview-content" class="language-html">
+<!-- Navigation Component Code Generator -->
+                </code></pre>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 border-t border-slate-800 bg-slate-950/50 flex justify-between items-center">
+                <span class="text-xs text-slate-500">Tailwind CSS + Pure JS Smooth Animations</span>
+                <button onclick="copyCodeSnippet()" class="px-4 py-2 rounded-xl bg-cyan-500 text-black font-semibold text-xs hover:bg-cyan-400 transition flex items-center space-x-2">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span id="copy-btn-text">Copy Code</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Global State Management
+        let currentNavStyle = 'liquid'; // 'liquid' | 'cyber' | 'island' | 'radial'
+        let currentActivePage = 'dashboard';
+        let soundEnabled = true;
+        let radialOpen = false;
+        let islandExpanded = false;
+
+        // Web Audio API Synthesizer for UI SFX
+        let audioCtx = null;
+
+        function playSound(type = 'click') {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.05);
+                    gain.gain.setValueAtTime(0.015, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'expand') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                }
+            } catch(e) {
+                console.log("Audio not supported or blocked", e);
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const statusEl = document.getElementById('sound-status');
+            const iconEl = document.getElementById('sound-icon');
+            
+            if (soundEnabled) {
+                statusEl.textContent = 'SFX: ON';
+                iconEl.classList.remove('text-slate-500');
+                iconEl.classList.add('text-emerald-400');
+                playSound('click');
+            } else {
+                statusEl.textContent = 'SFX: OFF';
+                iconEl.classList.remove('text-emerald-400');
+                iconEl.classList.add('text-slate-500');
+            }
+        }
+
+        // Initialize Lucide Icons
+        window.onload = function() {
+            lucide.createIcons();
+            
+            // Initial positioning for Liquid Glass Tab active indicator
+            const initialTab = document.querySelector('.liquid-tab');
+            if (initialTab) {
+                setTimeout(() => activateLiquidTab(initialTab, 'dashboard', false), 100);
+            }
+
+            // Render Content Canvas initial state
+            updatePageContent('dashboard');
+
+            // Add hover sound listeners to interactive elements
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('mouseenter', () => playSound('hover'));
+            });
+        };
+
+        // NAVIGATION STYLE SWITCHER
+        function switchNavStyle(style) {
+            playSound('expand');
+            currentNavStyle = style;
+
+            // Highlight Tab Buttons
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                btn.className = 'nav-tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50';
+            });
+
+            const activeBtn = document.getElementById(`tab-${style}`);
+            if (activeBtn) {
+                activeBtn.className = 'nav-tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 bg-cyan-500 text-black font-semibold shadow-lg shadow-cyan-500/25';
+            }
+
+            // Hide all Nav containers
+            document.querySelectorAll('.nav-demo-block').forEach(el => el.classList.add('hidden'));
+
+            // Title & Description Metadata updates
+            const titleEl = document.getElementById('nav-description-title');
+            const tagEl = document.getElementById('nav-description-tag');
+
+            if (style === 'liquid') {
+                document.getElementById('nav-container-liquid').classList.remove('hidden');
+                titleEl.innerHTML = `<i data-lucide="droplet" class="w-4 h-4 text-cyan-400"></i> Liquid Glassmorphism Dock`;
+                tagEl.textContent = 'Spring Physics Indicator';
+                setTimeout(() => {
+                    const firstTab = document.querySelector('.liquid-tab');
+                    if(firstTab) activateLiquidTab(firstTab, currentActivePage, false);
+                }, 50);
+            } else if (style === 'cyber') {
+                document.getElementById('nav-container-cyber').classList.remove('hidden');
+                titleEl.innerHTML = `<i data-lucide="zap" class="w-4 h-4 text-pink-400"></i> Cyberpunk Neon Glowing Navbar`;
+                tagEl.textContent = 'Glow Slide Underline';
+                setTimeout(() => {
+                    const firstTab = document.querySelector('.cyber-tab');
+                    if(firstTab) activateCyberTab(firstTab, currentActivePage, false);
+                }, 50);
+            } else if (style === 'island') {
+                document.getElementById('nav-container-island').classList.remove('hidden');
+                titleEl.innerHTML = `<i data-lucide="maximize-2" class="w-4 h-4 text-emerald-400"></i> Dynamic Island Command Bar`;
+                tagEl.textContent = 'Interactive Expansion';
+            } else if (style === 'radial') {
+                document.getElementById('nav-container-radial').classList.remove('hidden');
+                titleEl.innerHTML = `<i data-lucide="disc" class="w-4 h-4 text-purple-400"></i> Radial Floating Action Circle Nav`;
+                tagEl.textContent = '360° Circular Fan Out';
+            }
+
+            lucide.createIcons();
+        }
+
+        // ================= NAV 1 LOGIC: LIQUID GLASS TABS =================
+        function activateLiquidTab(element, pageKey, triggerSound = true) {
+            if (triggerSound) playSound('click');
+            currentActivePage = pageKey;
+
+            const pill = document.getElementById('liquid-pill');
+            if (pill && element) {
+                const nav = element.parentElement;
+                const navRect = nav.getBoundingClientRect();
+                const tabRect = element.getBoundingClientRect();
+
+                const leftPos = tabRect.left - navRect.left;
+                const width = tabRect.width;
+
+                pill.style.left = `${leftPos}px`;
+                pill.style.width = `${width}px`;
+                pill.style.opacity = '1';
+            }
+
+            // Highlight link text colors
+            document.querySelectorAll('.liquid-tab').forEach(tab => {
+                tab.classList.remove('text-white');
+                tab.classList.add('text-slate-400');
+            });
+            element.classList.remove('text-slate-400');
+            element.classList.add('text-white');
+
+            updatePageContent(pageKey);
+        }
+
+        // ================= NAV 2 LOGIC: CYBERPUNK NEON =================
+        function activateCyberTab(element, pageKey, triggerSound = true) {
+            if (triggerSound) playSound('click');
+            currentActivePage = pageKey;
+
+            const glowBar = document.getElementById('cyber-glow-bar');
+            if (glowBar && element) {
+                const nav = element.parentElement;
+                const navRect = nav.getBoundingClientRect();
+                const tabRect = element.getBoundingClientRect();
+
+                const leftPos = tabRect.left - navRect.left;
+                const width = tabRect.width;
+
+                glowBar.style.left = `${leftPos}px`;
+                glowBar.style.width = `${width}px`;
+                glowBar.style.opacity = '1';
+            }
+
+            document.querySelectorAll('.cyber-tab').forEach(tab => {
+                tab.classList.remove('text-cyan-400', 'bg-cyan-950/40');
+                tab.classList.add('text-slate-400');
+            });
+            element.classList.remove('text-slate-400');
+            element.classList.add('text-cyan-400');
+
+            updatePageContent(pageKey);
+        }
+
+        // ================= NAV 3 LOGIC: DYNAMIC ISLAND =================
+        function toggleIslandExpand(e) {
+            if (e) e.stopPropagation();
+            playSound('expand');
+
+            const island = document.getElementById('dynamic-island-el');
+            const compactView = document.getElementById('island-compact');
+            const expandedView = document.getElementById('island-expanded');
+
+            islandExpanded = !islandExpanded;
+
+            if (islandExpanded) {
+                island.classList.remove('rounded-full', 'py-2.5', 'px-5');
+                island.classList.add('rounded-3xl', 'p-4', 'max-w-md', 'w-full');
+                compactView.classList.add('hidden');
+                expandedView.classList.remove('hidden');
+                expandedView.classList.add('flex');
+            } else {
+                island.classList.add('rounded-full', 'py-2.5', 'px-5');
+                island.classList.remove('rounded-3xl', 'p-4', 'max-w-md', 'w-full');
+                compactView.classList.remove('hidden');
+                expandedView.classList.add('hidden');
+                expandedView.classList.remove('flex');
+            }
+        }
+
+        function selectIslandPage(pageKey, e) {
+            if (e) e.stopPropagation();
+            playSound('click');
+            currentActivePage = pageKey;
+            updatePageContent(pageKey);
+        }
+
+        // ================= NAV 4 LOGIC: RADIAL CIRCLE MENU =================
+        function toggleRadialMenu() {
+            playSound('expand');
+            radialOpen = !radialOpen;
+
+            const icon = document.getElementById('radial-icon');
+            const items = document.querySelectorAll('.radial-item');
+
+            if (radialOpen) {
+                icon.style.transform = 'rotate(135deg)';
+                const radius = 80; // Distance from center
+                const totalItems = items.length;
+                const startAngle = -180; // Arc degrees
+                const arcLength = 180;
+
+                items.forEach((item, index) => {
+                    const angle = (startAngle + (arcLength / (totalItems - 1)) * index) * (Math.PI / 180);
+                    const x = Math.round(radius * Math.cos(angle));
+                    const y = Math.round(radius * Math.sin(angle));
+
+                    item.style.transform = `translate(${x}px, ${y}px)`;
+                    item.style.opacity = '1';
+                });
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+                items.forEach(item => {
+                    item.style.transform = 'translate(0px, 0px)';
+                    item.style.opacity = '0';
+                });
+            }
+        }
+
+        function selectRadialPage(pageKey) {
+            playSound('click');
+            currentActivePage = pageKey;
+            toggleRadialMenu();
+            updatePageContent(pageKey);
+        }
+
+        // ================= COLOR THEME MANAGER =================
+        function setTheme(theme) {
+            playSound('click');
+            const ambient1 = document.getElementById('ambient-glow-1');
+            const ambient2 = document.getElementById('ambient-glow-2');
+
+            if (theme === 'cyberpunk') {
+                ambient1.className = 'absolute -top-24 -left-24 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl pointer-events-none';
+                ambient2.className = 'absolute -bottom-24 -right-24 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none';
+            } else if (theme === 'glass') {
+                ambient1.className = 'absolute -top-24 -left-24 w-72 h-72 bg-blue-500/15 rounded-full blur-3xl pointer-events-none';
+                ambient2.className = 'absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none';
+            } else if (theme === 'emerald') {
+                ambient1.className = 'absolute -top-24 -left-24 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none';
+                ambient2.className = 'absolute -bottom-24 -right-24 w-72 h-72 bg-teal-500/20 rounded-full blur-3xl pointer-events-none';
+            } else if (theme === 'sunset') {
+                ambient1.className = 'absolute -top-24 -left-24 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl pointer-events-none';
+                ambient2.className = 'absolute -bottom-24 -right-24 w-72 h-72 bg-rose-500/20 rounded-full blur-3xl pointer-events-none';
+            }
+        }
+
+        // MOBILE DRAWER LOGIC
+        function toggleMobileDrawer() {
+            playSound('expand');
+            const overlay = document.getElementById('mobile-drawer-overlay');
+            const drawer = document.getElementById('mobile-drawer-content');
+
+            if (overlay.classList.contains('opacity-0')) {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                drawer.classList.remove('translate-x-full');
+            } else {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                drawer.classList.add('translate-x-full');
+            }
+        }
+
+        function selectMobileLink(pageKey) {
+            toggleMobileDrawer();
+            updatePageContent(pageKey);
+        }
+
+        // DYNAMIC PAGE CONTENT UPDATE SIMULATOR
+        function updatePageContent(pageKey) {
+            const titleEl = document.getElementById('preview-page-title');
+            const bodyEl = document.getElementById('preview-page-body');
+
+            const contentData = {
+                dashboard: {
+                    title: 'Dashboard Overview',
+                    cards: [
+                        { icon: 'trending-up', label: 'Total Revenue', value: '$128,430', change: '+14.2%', color: 'text-emerald-400' },
+                        { icon: 'users', label: 'Active Users', value: '24,510', change: '+8.1%', color: 'text-cyan-400' },
+                        { icon: 'activity', label: 'System Health', value: '99.98%', change: 'Optimal', color: 'text-purple-400' }
+                    ]
+                },
+                analytics: {
+                    title: 'Analytics & Insights',
+                    cards: [
+                        { icon: 'bar-chart-2', label: 'Page Views', value: '1.4M', change: '+22.5%', color: 'text-purple-400' },
+                        { icon: 'clock', label: 'Avg. Session', value: '4m 32s', change: '+12.0%', color: 'text-pink-400' },
+                        { icon: 'zap', label: 'Bounce Rate', value: '24.1%', change: '-3.4%', color: 'text-emerald-400' }
+                    ]
+                },
+                projects: {
+                    title: 'Active Projects',
+                    cards: [
+                        { icon: 'folder', label: 'NavCraft UI', value: '85% Complete', change: 'In Progress', color: 'text-cyan-400' },
+                        { icon: 'git-branch', label: 'Design System v3', value: '12 Branches', change: 'Updated Today', color: 'text-amber-400' },
+                        { icon: 'check-circle-2', label: 'Mobile App Refactor', value: 'Completed', change: 'Shipped', color: 'text-emerald-400' }
+                    ]
+                },
+                team: {
+                    title: 'Team Directory',
+                    cards: [
+                        { icon: 'user-check', label: 'Designers', value: '8 Members', change: 'Active', color: 'text-indigo-400' },
+                        { icon: 'code', label: 'Engineers', value: '18 Members', change: 'Active', color: 'text-cyan-400' },
+                        { icon: 'award', label: 'Lead Contributors', value: '4 Leads', change: 'Verified', color: 'text-pink-400' }
+                    ]
+                },
+                settings: {
+                    title: 'System Settings',
+                    cards: [
+                        { icon: 'shield', label: 'Security Status', value: '2FA Enabled', change: 'Secured', color: 'text-emerald-400' },
+                        { icon: 'key', label: 'API Keys', value: '4 Active Keys', change: 'Rate Limited', color: 'text-yellow-400' },
+                        { icon: 'database', label: 'Database Backup', value: '10 mins ago', change: 'Automated', color: 'text-cyan-400' }
+                    ]
+                }
+            };
+
+            const data = contentData[pageKey] || contentData.dashboard;
+            titleEl.textContent = data.title;
+
+            bodyEl.innerHTML = data.cards.map(card => `
+                <div class="p-5 rounded-2xl bg-slate-800/40 border border-slate-700/50 hover:border-slate-600 transition duration-300 transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-700/60">
+                            <i data-lucide="${card.icon}" class="w-5 h-5 ${card.color}"></i>
+                        </div>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-900 text-slate-400 border border-slate-700">${card.change}</span>
+                    </div>
+                    <div class="text-xs text-slate-400 font-medium">${card.label}</div>
+                    <div class="text-xl font-bold text-white mt-1">${card.value}</div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // CONFETTI EFFECT
+        function triggerConfetti() {
+            playSound('expand');
+            confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.8 },
+                colors: ['#00f3ff', '#ff007f', '#10b981', '#ff9966']
+            });
+        }
+
+        // CODE EXPORT MODAL LOGIC
+        function toggleCodeModal() {
+            playSound('expand');
+            const modal = document.getElementById('code-modal');
+            
+            if (modal.classList.contains('opacity-0')) {
+                // Populate Code Box
+                document.getElementById('code-preview-content').textContent = getCodeSnippet(currentNavStyle);
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function copyCodeSnippet() {
+            playSound('click');
+            const codeText = document.getElementById('code-preview-content').textContent;
+            
+            // Clipboard Copy fallback for iframe/browser constraints
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const btnText = document.getElementById('copy-btn-text');
+            btnText.textContent = 'Copied!';
+            setTimeout(() => {
+                btnText.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        function getCodeSnippet(style) {
+            if (style === 'liquid') {
+                return `<nav class="relative bg-white/5 backdrop-blur-md rounded-full p-2 flex items-center space-x-2 border border-white/20">
+  <div id="liquid-pill" class="absolute top-2 bottom-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 transition-all duration-300"></div>
+
+  <button onclick="movePill(this)" class="relative z-10 px-5 py-2.5 rounded-full text-sm font-medium text-white">
+    Dashboard
+  </button>
+  <button onclick="movePill(this)" class="relative z-10 px-5 py-2.5 rounded-full text-sm font-medium text-slate-400">
+    Analytics
+  </button>
+</nav>`;
+            } else if (style === 'cyber') {
+                return `<nav class="relative bg-slate-950 border-2 border-cyan-500/50 rounded-2xl p-2 flex space-x-3 shadow-[0_0_20px_rgba(0,243,255,0.3)]">
+  <div id="cyber-glow" class="absolute bottom-0 h-1 bg-gradient-to-r from-pink-500 to-cyan-400 transition-all duration-300"></div>
+
+  <button class="px-4 py-2 font-mono text-cyan-400">SYS_HOME</button>
+  <button class="px-4 py-2 font-mono text-slate-400">DATA_STREAM</button>
+</nav>`;
+            } else if (style === 'island') {
+                return `<div class="bg-black/90 border border-slate-800 rounded-full py-2.5 px-5 flex items-center space-x-6 text-white transition-all duration-500">
+  <div class="flex items-center space-x-2">
+    <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
+    <span class="text-xs font-mono">LIVE SESSION</span>
+  </div>
+</div>`;
+            } else {
+                return `<div class="relative">
+  <button onclick="toggleRadial()" class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold">
+    +
+  </button>
+</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

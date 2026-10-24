@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "category": "textbox",
+    "elementName": "Floating Textbox",
+    "routeName": "floating-textbox",
+    "title": "Modern Floating Textbox",
+    "description": "Textbox with animated floating label and validation support.",
+    "image": "/images/floating-textbox.png",
+    "tags": ["input", "form", "textbox"],
+    "featured": true
+  },
+  {
+    "id": 2,
+    "category": "button",
+    "elementName": "Gradient Button",
+    "routeName": "gradient-button",
+    "title": "Gradient CTA Button",
+    "description": "Modern call-to-action button with gradient background.",
+    "image": "/images/gradient-button.png",
+    "tags": ["button", "cta", "action"],
+    "featured": true
+  },
+  {
+    "id": 3,
+    "category": "navbar",
+    "elementName": "Glass Navbar",
+    "routeName": "glass-navbar",
+    "title": "Glassmorphism Navigation Bar",
+    "description": "Responsive navigation bar with glass effect.",
+    "image": "/images/glass-navbar.png",
+    "tags": ["navigation", "header", "menu"],
+    "featured": false
+  },
+  {
+    "id": 4,
+    "category": "sidebar",
+    "elementName": "Collapsible Sidebar",
+    "routeName": "collapsible-sidebar",
+    "title": "Collapsible Sidebar Menu",
+    "description": "Expandable sidebar with nested menu items.",
+    "image": "/images/sidebar.png",
+    "tags": ["navigation", "sidebar"],
+    "featured": false
+  },
+  {
+    "id": 5,
+    "category": "card",
+    "elementName": "Pricing Card",
+    "routeName": "pricing-card",
+    "title": "Pricing Plan Card",
+    "description": "Responsive pricing card for subscription plans.",
+    "image": "/images/pricing-card.png",
+    "tags": ["pricing", "card"],
+    "featured": true
+  }
+]
