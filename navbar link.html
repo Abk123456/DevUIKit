@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three Independent Modern Navbars</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* ==========================================
+       DESIGN 1: Clean Minimalist Light Navbar
+       ================================---------- */
+    .nav-design-one {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 1.5rem;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      margin-bottom: 2rem;
+    }
+
+    .nav-one-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      box-sizing: border-box;
+    }
+
+    .nav-one-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    .nav-one-logo-accent {
+      color: #3b82f6;
+    }
+
+    .nav-one-list {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-one-link {
+      text-decoration: none;
+      color: #475569;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-one-link:hover {
+      color: #3b82f6;
+    }
+
+    .nav-one-search {
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+
+    .nav-one-search:focus-within {
+      border-color: #3b82f6;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .nav-one-search-icon {
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .nav-one-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.9rem;
+      color: #1e293b;
+      width: 160px;
+      font-family: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* ==========================================
+       DESIGN 2: Sleek Dark Executive Navbar with Dropdown
+       ================================---------- */
+    .nav-design-two {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 0 2rem;
+      border-radius: 12px;
+      max-width: 1200px;
+      margin: 2rem auto;
+      box-sizing: border-box;
+    }
+
+    .nav-two-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .nav-two-logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-two-list {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-two-item {
+      position: relative;
+    }
+
+    .nav-two-link {
+      text-decoration: none;
+      color: #94a3b8;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.2s;
+    }
+
+    .nav-two-link:hover {
+      color: #ffffff;
+    }
+
+    .nav-two-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      min-width: 160px;
+      padding: 0.5rem 0;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      z-index: 50;
+    }
+
+    .nav-two-dropdown-item {
+      padding: 0.6rem 1rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-two-dropdown-item:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+
+    .nav-two-item:hover .nav-two-dropdown {
+      display: flex;
+    }
+
+    .nav-two-search {
+      display: flex;
+      align-items: center;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      gap: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    .nav-two-search:focus-within {
+      border-color: #60a5fa;
+    }
+
+    .nav-two-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      color: #ffffff;
+      font-size: 0.9rem;
+      width: 150px;
+      font-family: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-two-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-two-btn:hover {
+      color: #ffffff;
+    }
+
+    /* ==========================================
+       DESIGN 3: Floating Gradient Capsule Navbar
+       ================================---------- */
+    .nav-design-three {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      box-sizing: border-box;
+    }
+
+    .nav-three-capsule {
+      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+      border-radius: 50px;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+      box-sizing: border-box;
+    }
+
+    .nav-three-logo {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-three-list {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-three-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-three-link:hover {
+      color: #ffffff;
+    }
+
+    .nav-three-search {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 0.35rem 0.9rem;
+      gap: 0.5rem;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-sizing: border-box;
+    }
+
+    .nav-three-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      color: #ffffff;
+      font-size: 0.85rem;
+      width: 140px;
+      font-family: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-three-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .nav-three-searchbtn {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0;
+      margin: 0;
+    }
+
+    .section-label {
+      text-align: center;
+      font-family: sans-serif;
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body style="background-color: #f1f5f9; margin: 0; padding: 20px 0;">
+
+  <!-- DESIGN 1: Clean Minimalist Light Navbar -->
+  <div class="section-label">Design 1: Clean Minimalist Light</div>
+  <div class="nav-design-one">
+    <div class="nav-one-container">
+      <a href="#" class="nav-one-logo"><i class="fa fa-cube"></i> Nexus<span class="nav-one-logo-accent">UI</span></a>
+      <ul class="nav-one-list">
+        <li><a href="#" class="nav-one-link">Overview</a></li>
+        <li><a href="#" class="nav-one-link">Solutions</a></li>
+        <li><a href="#" class="nav-one-link">Resources</a></li>
+        <li><a href="#" class="nav-one-link">Pricing</a></li>
+      </ul>
+      <div class="nav-one-search">
+        <i class="fa fa-search nav-one-search-icon"></i>
+        <input type="text" class="nav-one-input" placeholder="Search documentation...">
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN 2: Sleek Dark Executive Navbar with Dropdown -->
+  <div class="section-label">Design 2: Dark Executive with Child Navbar</div>
+  <div class="nav-design-two">
+    <div class="nav-two-container">
+      <a href="#" class="nav-two-logo">ApexCode.io</a>
+      <ul class="nav-two-list">
+        <li class="nav-two-item"><a href="#" class="nav-two-link">Dashboard</a></li>
+        <li class="nav-two-item">
+          <a href="#" class="nav-two-link">Products <i class="fa fa-angle-down"></i></a>
+          <div class="nav-two-dropdown">
+            <a href="#" class="nav-two-dropdown-item">Cloud Servers</a>
+            <a href="#" class="nav-two-dropdown-item">Database Storage</a>
+            <a href="#" class="nav-two-dropdown-item">Edge Security</a>
+          </div>
+        </li>
+        <li class="nav-two-item"><a href="#" class="nav-two-link">Developers</a></li>
+        <li class="nav-two-item"><a href="#" class="nav-two-link">Enterprise</a></li>
+      </ul>
+      <div class="nav-two-search">
+        <input type="text" class="nav-two-input" placeholder="Quick search...">
+        <button class="nav-two-btn"><i class="fa fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN 3: Floating Gradient Capsule Navbar -->
+  <div class="section-label">Design 3: Floating Gradient Capsule</div>
+  <div class="nav-design-three">
+    <div class="nav-three-capsule">
+      <a href="#" class="nav-three-logo"><i class="fa fa-circle-o-notch"></i> Veloce</a>
+      <ul class="nav-three-list">
+        <li><a href="#" class="nav-three-link">Features</a></li>
+        <li><a href="#" class="nav-three-link">Showcase</a></li>
+        <li><a href="#" class="nav-three-link">Community</a></li>
+        <li><a href="#" class="nav-three-link">Support</a></li>
+      </ul>
+      <div class="nav-three-search">
+        <input type="text" class="nav-three-input" placeholder="Find features...">
+        <button class="nav-three-searchbtn"><i class="fa fa-search"></i></button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

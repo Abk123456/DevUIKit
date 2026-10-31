@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Component Dashboard with Bottom Tag Slider</title>
+    <!-- Google Fonts & FontAwesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --footer-bar-height: 75px;
+        }
+
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+
+
+        /* --- SIDEBAR / WIDGET AREA --- */
+        aside {
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+
+
+        .sidebar-brand {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+
+
+        .sidebar-brand i {
+            margin-right: 0.75rem;
+        }
+
+
+
+        .sidebar-widgets {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+
+
+        .widget-card {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+
+
+        .widget-card h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+
+
+        /* --- MAIN LAYOUT CONTAINER --- */
+        .main-container {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: var(--footer-bar-height); /* Make room for bottom bar */
+        }
+
+
+
+        /* --- HEADER NAVBAR --- */
+        header {
+            height: var(--header-height);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+
+
+        .header-search {
+            position: relative;
+        }
+
+
+
+        .header-search input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            font-size: 0.875rem;
+            outline: none;
+            width: 240px;
+            transition: all 0.2s;
+        }
+
+
+
+        .header-search input:focus {
+            width: 300px;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+
+
+        .header-search i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+
+
+        /* --- CONTENT BODY --- */
+        main {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+
+
+        .category-section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 90px; /* Offset for smooth scroll positioning */
+        }
+
+
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+
+
+        .category-badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+
+
+        /* --- GRID SYSTEM & CARDS --- */
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+
+
+        .element-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+
+
+        .element-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+        }
+
+
+
+        .card-img-container {
+            height: 160px;
+            background: #f1f5f9;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+
+        .card-img-placeholder {
+            color: var(--text-muted);
+            font-size: 2.5rem;
+        }
+
+
+
+        .featured-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #f59e0b;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+
+
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+
+
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+
+
+
+        /* Tags List Container inside card */
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 1rem;
+        }
+
+
+
+        .tag-pill {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+
+
+        /* Interactive Demo Box Element Container */
+        .demo-textbox-wrapper {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+
+
+        .floating-group {
+            position: relative;
+            margin-top: 0.5rem;
+        }
+
+
+
+        .floating-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.875rem;
+            background: #ffffff;
+            transition: border-color 0.2s;
+        }
+
+
+
+        .floating-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+
+
+
+        .floating-group label {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            padding: 0 0.25rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            pointer-events: none;
+            transition: 0.2s ease all;
+        }
+
+
+
+        .floating-group input:focus ~ label,
+        .floating-group input:not(:placeholder-shown) ~ label {
+            top: 0;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+
+
+        /* Footer Redirection Link & Details */
+        .card-footer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            margin-top: auto;
+        }
+
+
+
+        .route-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+
+
+        .route-link:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+
+
+        .meta-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+
+
+        /* --- BOTTOM STICKY TAG SLIDER BAR --- */
+        .bottom-tag-bar {
+            position: fixed;
+            bottom: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--footer-bar-height);
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            gap: 1rem;
+            z-index: 95;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+        }
+
+
+
+        .scroll-control-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+
+
+        .scroll-control-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+
+
+        .tag-slider-container {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+            flex-grow: 1;
+            padding: 0.25rem 0;
+            scrollbar-width: none; /* Firefox */
+        }
+
+
+
+        .tag-slider-container::-webkit-scrollbar {
+            display: none; /* Safari & Chrome */
+        }
+
+
+
+        .tag-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+
+
+        .tag-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+
+
+        .tag-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            aside {
+                display: none;
+            }
+            .main-container {
+                margin-left: 0;
+            }
+            .bottom-tag-bar {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <!-- SIDEBAR / WIDGET AREA -->
+    <aside>
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-cubes"></i> UI Registry
+        </div>
+        <div class="sidebar-widgets">
+            <!-- Summary Widget Analytics -->
+            <div class="widget-card">
+                <h3><i class="fa-solid fa-chart-pie"></i> Element Analytics</h3>
+                <div class="stat-grid" id="stats-container">
+                    <!-- Populated dynamically via script -->
+                </div>
+            </div>
+
+
+
+            <!-- Quick Info Widget -->
+            <div class="widget-card">
+                <h3><i class="fa-solid fa-compass"></i> Navigation Guide</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                    Click tags on the bottom scrollbar to smoothly jump to specific component categories.
+                </p>
+            </div>
+        </div>
+    </aside>
+
+
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="main-container">
+        
+        <!-- HEADER NAVBAR -->
+        <header>
+            <div class="header-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Search components & tags...">
+            </div>
+        </header>
+
+
+
+        <!-- MAIN DYNAMIC CONTENT SECTION -->
+        <main id="main-content-area">
+            <!-- Rendered categories and cards injected here -->
+        </main>
+    </div>
+
+
+
+    <!-- BOTTOM STICKY TAG SLIDER BAR -->
+    <div class="bottom-tag-bar">
+        <button class="scroll-control-btn" onclick="scrollTags('left')" title="Scroll Left">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="tag-slider-container" id="tag-slider">
+            <!-- Tag buttons injected dynamically -->
+        </div>
+        <button class="scroll-control-btn" onclick="scrollTags('right')" title="Scroll Right">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        
+        // Updated Component Data supporting multiple tags array
+
+
+        let componentsData = [];
+
+fetch("devuikitobject.json")
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        componentsData = data; // Assign all 25 objects to componentsData
+        console.log(`Successfully loaded ${componentsData.length} components!`);
+        
+        renderAnalytics();
+        renderTagSlider();
+        renderMainContent();
+        
+    })
+    .catch(error => {
+        console.error("Failed to fetch devuikitobject.json:", error);
+    });
+
+
+
+        // State Management
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+
+
+        // DOM Elements
+        const tagSliderEl = document.getElementById('tag-slider');
+        const mainContentEl = document.getElementById('main-content-area');
+        const statsContainerEl = document.getElementById('stats-container');
+        const searchInputEl = document.getElementById('search-input');
+
+
+
+        // 1. Compute and Render Analytics Widget (Textboxes, Links, Descriptions count)
+        function renderAnalytics() {
+            let totalTextboxes = componentsData.filter(item => item.category.toLowerCase().includes('textbox') || item.elementName.toLowerCase().includes('textbox')).length;
+            let totalLinks = componentsData.length; // Each item features a routeName/redirection link
+            let totalDescriptions = componentsData.filter(item => item.description && item.description.trim() !== "").length;
+
+
+
+            statsContainerEl.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Total Textboxes</span>
+                    <span class="stat-value">${totalTextboxes}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Redirection Links</span>
+                    <span class="stat-value">${totalLinks}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Descriptions</span>
+                    <span class="stat-value">${totalDescriptions}</span>
+                </div>
+            `;
+        }
+
+
+
+        // 2. Render Bottom Tag Slider Filters
+        function renderTagSlider() {
+            // Extract distinct categories + unique multi-tags
+            const categories = ['all', ...new Set(componentsData.map(item => item.category))];
+            const allTags = [...new Set(componentsData.flatMap(item => item.tags || []))];
+            
+            // Combine categories and tags for comprehensive filter slider
+            const combinedFilters = [...new Set([...categories, ...allTags])];
+            
+            tagSliderEl.innerHTML = combinedFilters.map(tag => `
+                <button class="tag-btn ${activeFilter === tag ? 'active' : ''}" onclick="handleTagClick('${tag}')">
+                    #${tag.charAt(0).toUpperCase() + tag.slice(1)}
+                </button>
+            `).join('');
+        }
+
+
+
+        // Tag Click Handler: Filters elements and smoothly scrolls to category position if applicable
+        window.handleTagClick = function(tag) {
+            activeFilter = tag;
+            renderTagSlider();
+            renderMainContent();
+
+
+
+            // If the clicked tag matches a category section, scroll to its position
+            const sectionEl = document.getElementById(`section-${tag}`);
+            if (sectionEl) {
+                sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+
+
+        // Horizontal scroll buttons helper for the bottom bar
+        window.scrollTags = function(direction) {
+            const scrollAmount = 200;
+            if (direction === 'left') {
+                tagSliderEl.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                tagSliderEl.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+
+
+        // Search event listener
+        searchInputEl.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            renderMainContent();
+        });
+
+
+
+        // 3. Render Main Content Section Categorized
+        function renderMainContent() {
+            // Filter data based on active tag/category and search query
+            const filteredData = componentsData.filter(item => {
+                const matchesFilter = activeFilter === 'all' || 
+                                      item.category.toLowerCase() === activeFilter.toLowerCase() || 
+                                      (item.tags && item.tags.includes(activeFilter.toLowerCase()));
+                
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) || 
+                                      item.description.toLowerCase().includes(searchQuery) || 
+                                      item.elementName.toLowerCase().includes(searchQuery) ||
+                                      (item.tags && item.tags.some(t => t.toLowerCase().includes(searchQuery)));
+                
+                return matchesFilter && matchesSearch;
+            });
+
+
+
+            if (filteredData.length === 0) {
+                mainContentEl.innerHTML = `
+                    <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-folder-open" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>No components found matching your filter or search query.</p>
+                    </div>
+                `;
+                return;
+            }
+
+
+
+            // Group by category
+            const grouped = {};
+            filteredData.forEach(item => {
+                if (!grouped[item.category]) {
+                    grouped[item.category] = [];
+                }
+                grouped[item.category].push(item);
+            });
+
+
+
+            let htmlOutput = '';
+
+
+
+            for (const [categoryName, items] of Object.entries(grouped)) {
+                htmlOutput += `
+                    <div class="category-section" id="section-${categoryName}">
+                        <div class="category-header">
+                            <h2 class="category-title">
+                                <i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> ${categoryName}
+                                <span class="category-badge">${items.length} element${items.length > 1 ? 's' : ''}</span>
+                            </h2>
+                        </div>
+                        <div class="elements-grid">
+                `;
+
+
+
+                items.forEach(item => {
+                    // Generate tags pills HTML
+                    const tagsHtml = item.tags ? item.tags.map(t => `<span class="tag-pill">#${t}</span>`).join('') : '';
+
+
+
+                    htmlOutput += `
+                        <div class="element-card">
+                            ${item.featured ? '<div class="featured-tag">Featured</div>' : ''}
+                            <div class="card-img-container">
+                                ${item.previewImage ? `<img src="${item.previewImage}" alt="${item.title}">` : `<i class="fa-solid fa-code card-img-placeholder"></i>`}
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">${item.title}</h3>
+                                <p class="card-description">${item.description}</p>
+                                
+                                <div class="card-tags">
+                                    ${tagsHtml}
+                                </div>
+                                
+                                <!-- Render interactive UI preview snippet if type matches textbox -->
+                                ${item.category.toLowerCase() === 'textbox' ? `
+                                    <div class="demo-textbox-wrapper">
+                                        <div class="floating-group">
+                                            <input type="text" placeholder=" " value="">
+                                            <label>Interactive Label</label>
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+
+
+                                <div class="card-footer-actions">
+                                    <a href="#${item.routeName}" class="route-link" onclick="alert('Redirecting to route: /${item.routeName}')">
+                                        <span>${item.routeName}</span>
+                                        <i class="fa-solid fa-arrow-right-long"></i>
+                                    </a>
+                                    <span class="meta-info">ID: ${item.id}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+
+
+                htmlOutput += `
+                        </div>
+                    </div>
+                `;
+            }
+
+
+
+            mainContentEl.innerHTML = htmlOutput;
+        }
+
+
+
+        // Initialize App on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAnalytics();
+            renderTagSlider();
+            renderMainContent();
+        });
+    </script>
+</body>
+</html>

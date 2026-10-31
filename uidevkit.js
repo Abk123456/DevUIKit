@@ -11,27 +11,16 @@
 
 
 
-// fetch("E:/Project/Git Project/Web Content/category.json")
-//     .then(res => res.json())
-//     .then(data => {
-//         document.getElementById("categorySelect").innerHTML +=
-//             data.map(x =>
-//                 `<option value="${x.value}">${x.text}</option>`
-//             ).join("");
-//     });
+fetch("category.json")
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("categorySelect").innerHTML +=
+            data.map(x =>
+                `<option value="${x.value}">${x.text}</option>`
+            ).join("");
+    });
 
-//---------------------------------------------
 
-// const route = "floating-textbox";
-
-// fetch("components.json")
-//     .then(res => res.json())
-//     .then(data => {
-//         const component = data.find(x => x.routeName === route);
-
-//         console.log(component.title);
-//         console.log(component.description);
-//     });
 
         // Focus expansion effect
         searchInput.addEventListener('focus', () => {
