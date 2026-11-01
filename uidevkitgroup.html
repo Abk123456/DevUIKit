@@ -878,7 +878,7 @@ fetch("devuikitobject.json")
 
 
                                 <div class="card-footer-actions">
-                                    <a href="#${item.routeName}" class="route-link" onclick="alert('Redirecting to route: /${item.routeName}')">
+                                    <a href="uidevkitcontent.html?p=${item.routeName}" class="route-link" onclick="alert('Redirecting to route: /${item.routeName}')">
                                         <span>${item.routeName}</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
                                     </a>
@@ -909,6 +909,51 @@ fetch("devuikitobject.json")
             renderAnalytics();
             renderTagSlider();
             renderMainContent();
+
+
+            fetch("devuikitobject.json")
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        
+
+        const urlParams = new URLSearchParams(window.location.search);
+            const searchValue = (urlParams.get('p') || urlParams.get('category') || urlParams.get('search') || urlParams.get('route') || '').toLowerCase().trim();
+
+             
+
+            if (searchValue) {
+              console.log(`Searching for category or tag: "${searchValue}"`);
+              console.log(`componentsData contains ${data.length} items.`);
+                // Verify if any object matches the category
+                const categoryExists = data.some(item => item.category.toLowerCase() === searchValue);
+
+                if (categoryExists) {
+                    console.log(`Value "${searchValue}" exists in componentsData. Rendering content...`);
+                    
+                    // 4. Scroll to the matching category section element
+                    setTimeout(() => {
+                        const targetSection = document.getElementById(`section-${searchValue}`);
+                        if (targetSection) {
+                            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 100); // Small delay to let the DOM finish rendering
+                } else {
+                    console.log(`Value "${searchValue}" does not exist in componentsData.`);
+                }
+            }
+        
+    })
+    .catch(error => {
+        console.error("Failed to fetch devuikitobject.json:", error);
+    });
+            
+            
+
         });
     </script>
 </body>

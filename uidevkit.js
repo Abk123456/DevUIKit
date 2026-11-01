@@ -101,3 +101,26 @@ fetch("category.json")
             filterComponents();
         }
   
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const componentGrid = document.getElementById('componentGrid');
+
+    if (componentGrid) {
+        componentGrid.addEventListener('click', (event) => {
+            // Find the closest parent element with the .component-card class
+            const card = event.target.closest('.component-card');
+            
+            if (card) {
+                // Get the data attributes from the clicked card
+                const category = card.getAttribute('data-category');
+                const name = card.getAttribute('data-name');
+                
+                // Construct the route search query (prefer name, fallback to category)
+                const routeQuery = encodeURIComponent(category || name );
+                
+                // Redirect to details page passing the route parameter
+                window.location.href = `uidevkitgroup.html?p=${routeQuery}`;
+            }
+        });
+    }
+});

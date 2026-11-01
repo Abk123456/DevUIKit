@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Details - DevUI Kit</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --surface: #1e293b;
+            --background: #0f172a;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background-color: rgba(99, 102, 241, 0.15);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        code {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Main Content Area where component details will render -->
+        <div id="main-content-area">
+            <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <p>Loading component details...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let componentsData = [];
+
+        // Function to render the matched component
+        function renderMatchedComponent(component) {
+            const mainContentEl = document.getElementById('main-content-area');
+            
+            if (!component) {
+                mainContentEl.innerHTML = `
+                    <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; margin-bottom: 1rem; color: #f59e0b;"></i>
+                        <h2>Component Not Found</h2>
+                        <p>No component matched your search parameter.</p>
+                        <a href="uidevkitgroup.html" style="color: var(--primary); text-decoration: underline; margin-top: 1rem; display: inline-block;">← Back to Home</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render your component details view here
+            mainContentEl.innerHTML = `
+                <div class="component-detail-view">
+                    <a href="uidevkitgroup.html" style="display: inline-block; margin-bottom: 1.5rem; color: var(--primary); text-decoration: none;">← Back to Home</a>
+                    <span class="category-badge">${component.category}</span>
+                    <h1 style="margin: 0.5rem 0 1rem 0; font-size: 2.2rem;">${component.title}</h1>
+                    <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">${component.description}</p>
+                    
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                        <h3 style="margin-top: 0; color: #f1f5f9;">Component Source Files</h3>
+                        <ul style="line-height: 2; padding-left: 1.2rem; margin-bottom: 0;">
+                            <li>HTML File: <code>${component.htmlFile}</code></li>
+                            <li>CSS File: <code>${component.cssFile}</code></li>
+                            <li>JS File: <code>${component.jsFile}</code></li>
+                            <li>Route Name: <code>${component.routeName}</code></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Main execution flow on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Get parameter value from the URL query string (e.g. ?search=floating-textbox)
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchValue = ( urlParams.get('p') || urlParams.get('search') || urlParams.get('name') || urlParams.get('route') || '').toLowerCase().trim();
+
+            console.log("Parameter received from URL:", searchValue);
+
+            // 2. Fetch the JSON object list
+            fetch("devuikitobject.json")
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! Status: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    componentsData = data; 
+                    console.log(`Successfully loaded ${componentsData.length} components!`);
+                    
+                    if (!searchValue) {
+                        renderMatchedComponent(null);
+                        return;
+                    }
+
+                    // 3. Match the parameter with your object fields
+                    const matchedComponent = componentsData.find(x => 
+                        x.routeName.toLowerCase() === searchValue ||
+                        x.elementName.toLowerCase().includes(searchValue) ||
+                        x.title.toLowerCase().includes(searchValue)
+                    );
+
+                    // 4. Render the component based on the match
+                    renderMatchedComponent(matchedComponent);
+                })
+                .catch(error => {
+                    console.error("Failed to fetch devuikitobject.json:", error);
+                    document.getElementById('main-content-area').innerHTML = `
+                        <div style="text-align: center; padding: 4rem; color: #ef4444;">
+                            <i class="fa-solid circle-xmark" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h2>Failed to load data</h2>
+                            <p>Could not fetch ` + `devuikitobject.json` + `.</p>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>
+
+
